@@ -19,8 +19,9 @@
         
     </h:form>
     
-	<h:form id="formPessoa">
+	<h:form id="formPessoa" rendered="#{pessoaBean.permiteAcesso('Administrador')}" >
     
+        <h:messages  infoStyle="color:green;background:white;"/>
         
         <h:panelGrid columns="2" >
         
