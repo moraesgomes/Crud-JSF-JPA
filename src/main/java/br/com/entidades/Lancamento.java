@@ -20,6 +20,7 @@ public class Lancamento implements Serializable {
 	
 
 	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -33,25 +34,6 @@ public class Lancamento implements Serializable {
 	@ManyToOne(optional = false)
 	@ForeignKey(name = "usuario_fk")
 	private Pessoa usuario;
-	
-	
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Lancamento other = (Lancamento) obj;
-		return Objects.equals(id, other.id);
-	}
 
 	public Long getId() {
 		return id;
@@ -91,6 +73,23 @@ public class Lancamento implements Serializable {
 
 	public void setUsuario(Pessoa usuario) {
 		this.usuario = usuario;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Lancamento other = (Lancamento) obj;
+		return Objects.equals(id, other.id);
 	}
 
 }
