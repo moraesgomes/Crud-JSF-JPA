@@ -37,6 +37,8 @@ public class Pessoa implements Serializable {
 	
 	private String nivelProgramador;
 	
+	private Integer[] linguagens;
+	
 	private String perfilUser;
 	
 	
@@ -48,6 +50,14 @@ public class Pessoa implements Serializable {
 	
     public Pessoa() {
 		
+	}
+    
+    public void setLinguagens(Integer[] linguagens) {
+		this.linguagens = linguagens;
+	}
+    
+    public Integer[] getLinguagens() {
+		return linguagens;
 	}
     
    
