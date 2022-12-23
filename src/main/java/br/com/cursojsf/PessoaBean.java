@@ -3,6 +3,7 @@ package br.com.cursojsf;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -26,13 +29,16 @@ import br.com.repository.IDaoPessoaImpl;
 
 @ViewScoped
 @ManagedBean(name = "pessoaBean")
-public class PessoaBean  {
-
+public class PessoaBean implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	private Pessoa pessoa = new Pessoa();
 	private DaoGeneric<Pessoa> daoGeneric = new DaoGeneric<Pessoa>();
 	private List<Pessoa> pessoas = new ArrayList<Pessoa>();
 	
 	private IDaoPessoa iDaoPessoa = new IDaoPessoaImpl();
+	
+	private List<SelectItem> estados;
 	
 	public String salvar() {
 		
@@ -120,6 +126,20 @@ public class PessoaBean  {
 		return "index.jsf";
 	}
 	
+	public String deslogar() {
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		ExternalContext externalContext = context.getExternalContext();
+		externalContext.getSessionMap().remove("usuarioLogado");
+		
+		HttpServletRequest httpServletRequest = (HttpServletRequest) context.getCurrentInstance().getExternalContext().getRequest();
+		
+		httpServletRequest.getSession().invalidate();
+		
+		return "index.jsf";
+	}
+	
+	
 	public boolean permiteAcesso(String acesso) {
 		
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -162,5 +182,21 @@ public class PessoaBean  {
 			mostrarMsg("Erro ao consultar o cep");
 		}
 		
+	}
+	
+	public List<SelectItem> getEstados() {
+		
+		estados = iDaoPessoa.listaEstados();
+		return estados;
+	}
+	
+	public void carregaCidades(AjaxBehaviorEvent event) {
+		
+		String codigoEstado = (String) event.getComponent().getAttributes().get("submittedValue");
+		
+		if (codigoEstado != null) {
+			
+			System.out.println(codigoEstado);
+		}
 	}
 }

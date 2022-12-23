@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui = "http://java.sun.com/jsf/facelets">
+      xmlns:ui = "http://java.sun.com/jsf/facelets"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:head>
 
@@ -33,9 +34,9 @@
     
         <h:outputLabel  value="Nome:"/>
 		<h:inputText value="#{pessoaBean.pessoa.nome}" 
-		   required="true" requiredMessage="Informe o nome do usuário"
+		   required="true" requiredMessage="Informe o nome do usuário" pt:placeholder="Informe o nome "
 		   validatorMessage="Nome tem que ter no minímo 10 Letras " >
-		   <f:validateLength minimum="10" maximum="50" />
+		    <f:validateLength minimum="10" maximum="100" />
 		
 		</h:inputText>
 		
@@ -82,7 +83,7 @@
 		</h:selectManyMenu>
 		
 		<h:outputLabel value="CEP:" />
-		<h:inputText  value="#{pessoaBean.pessoa.cep}">
+		<h:inputText  value="#{pessoaBean.pessoa.cep}" pt:placeholder="Informe um CEP Válido">
 		
 		    <f:ajax event="blur" execute="@this" listener="#{pessoaBean.pesquisarCep}" 
 		    render="logradouro complemento bairro localidade uf unidade ibge gia"/>
@@ -162,6 +163,16 @@
 		     <f:selectItem itemValue="5" itemLabel="Cobol"/>
 		  
 		</h:selectManyCheckbox>
+		
+		<h:outputLabel  value="Estados:"/>
+		<h:selectOneMenu value="#{pessoaBean.pessoa.estados}" immediate="true">
+		     
+		     <f:selectItem itemLabel="--[Selecione]--" noSelectionOption="true"/>
+		     <f:selectItems value="#{pessoaBean.estados}" />
+		     <f:ajax event="change" execute="@this" listener="#{pessoaBean.carregaCidades}"/>
+		     
+		
+		</h:selectOneMenu>
 		
 		<h:outputLabel />
 		
