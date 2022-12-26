@@ -45,7 +45,7 @@ public class IDaoPessoaImpl implements IDaoPessoa {
 		
 		for (Estados estado : estados) {
 			
-			selectItems.add(new SelectItem(estado.getId(), estado.getNome()));
+			selectItems.add(new SelectItem(estado, estado.getNome()));
 			
 		}
 		

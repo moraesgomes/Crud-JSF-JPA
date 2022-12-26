@@ -1,6 +1,11 @@
 package br.com.cursojsf;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -13,17 +18,24 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import javax.xml.bind.DatatypeConverter;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
 import br.com.dao.DaoGeneric;
+import br.com.entidades.Cidades;
+import br.com.entidades.Estados;
 import br.com.entidades.Pessoa;
+import br.com.jpautil.JPAUtil;
 import br.com.repository.IDaoPessoa;
 import br.com.repository.IDaoPessoaImpl;
 
@@ -40,7 +52,48 @@ public class PessoaBean implements Serializable {
 	
 	private List<SelectItem> estados;
 	
-	public String salvar() {
+	private List<SelectItem> cidades;
+	
+	private Part arquivofoto;
+	
+	public String salvar() throws IOException {
+		
+		
+		
+		byte[] imagemByte = getByte(arquivofoto.getInputStream());
+		pessoa.setFotoIconBase64Original(imagemByte); /*Salva imagem original*/
+		
+		/*transformar em bufferimage*/
+		
+		BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imagemByte));
+		
+		/*Pega o tipo da imagem*/
+   
+		 int type = bufferedImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : bufferedImage.getType();
+		 
+		 int largura = 200;
+		 int altura  = 200;
+		 
+		 /* Criar a miniatura */
+		 
+		 BufferedImage resizedImage = new BufferedImage(altura, largura, type);
+		 Graphics2D g = resizedImage.createGraphics();
+		 g.drawImage(bufferedImage, 0, 0, largura, altura, null);
+		 g.dispose();
+		 
+		 /*Escrever novamente a imagem em tamanho menor*/
+		 
+		   ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		   String extensao = arquivofoto.getContentType().split("\\/")[1]; /*imagem/png*/
+		   ImageIO.write(resizedImage, extensao, baos);
+		   
+		   String miniImagem = "data:" + arquivofoto.getContentType() + ";base64," +
+		                        DatatypeConverter.printBase64Binary(baos.toByteArray());
+		 
+		 /*Processar imagem*/
+		   
+		   pessoa.setFotoIconBase64(miniImagem);
+		   pessoa.setExtensao(extensao);
 		
 		pessoa = daoGeneric.merge(pessoa);
 		carregarPessoas();
@@ -192,11 +245,97 @@ public class PessoaBean implements Serializable {
 	
 	public void carregaCidades(AjaxBehaviorEvent event) {
 		
-		String codigoEstado = (String) event.getComponent().getAttributes().get("submittedValue");
+		Estados estado = (Estados) ((HtmlSelectOneMenu)event.getSource()).getValue();
 		
-		if (codigoEstado != null) {
-			
-			System.out.println(codigoEstado);
+	      
+          			
+			if(estado !=null) {
+				
+				pessoa.setEstados(estado);
+				
+				List<Cidades> cidades =JPAUtil.getEntityManager()
+						.createQuery("from Cidades where estados.id =  " + estado.getId()).getResultList();
+				
+				List<SelectItem> selectItemsCidade = new ArrayList<SelectItem>();
+				
+				for (Cidades cidade : cidades) {
+					
+					selectItemsCidade.add(new SelectItem(cidade,cidade.getNome()));
+					
+				}
+				
+				setCidades(selectItemsCidade);
+			}
 		}
+	
+	public void editar() {
+		
+		if (pessoa.getCidades() != null) {
+			
+			Estados estado = pessoa.getCidades().getEstados();
+			pessoa.setEstados(estado);
+			
+			List<Cidades> cidades =JPAUtil.getEntityManager()
+					.createQuery("from Cidades where estados.id =  " + estado.getId()).getResultList();
+			
+			List<SelectItem> selectItemsCidade = new ArrayList<SelectItem>();
+			
+			for (Cidades cidade : cidades) {
+				
+				selectItemsCidade.add(new SelectItem(cidade,cidade.getNome()));
+				
+			}
+			
+			setCidades(selectItemsCidade);
+		}
+		
+	}
+	
+	
+	public void setCidades(List<SelectItem> cidades) {
+		this.cidades = cidades;
+	}
+	
+	public List<SelectItem> getCidades() {
+		return cidades;
+	}
+	
+	public void setArquivofoto(Part arquivofoto) {
+		this.arquivofoto = arquivofoto;
+	}
+	
+	public Part getArquivofoto() {
+		return arquivofoto;
+	}
+	
+	/*Método que converte inpustream para array de bytes*/
+	
+	private byte[] getByte (InputStream is) throws IOException {
+		
+		int len;
+		int size = 1024;
+		byte[] buf = null;
+		
+		if (is instanceof ByteArrayInputStream) {
+			
+			size = is.available();
+			buf = new byte[size];
+			len = is.read(buf,0,size);
+			
+		} else {
+			
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			buf = new byte[size];
+			
+			while((len = is.read(buf,0,size)) != -1) {
+				
+				bos.write(buf,0,len);
+			}
+			
+			buf = bos.toByteArray();
+		}
+		
+		return buf;
+		
 	}
 }
