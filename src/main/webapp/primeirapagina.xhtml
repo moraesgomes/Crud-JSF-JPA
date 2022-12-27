@@ -35,8 +35,7 @@
       
         <h:outputLabel  value="Nome:"/>
 		<h:inputText value="#{pessoaBean.pessoa.nome}" 
-		   required="true" requiredMessage="Informe o nome do usuário" pt:placeholder="Informe o nome "
-		   validatorMessage="Nome tem que ter no minímo 10 Letras " >
+		   required="true" requiredMessage="Informe o nome do usuário" pt:placeholder="Informe o nome " >
 		    <f:validateLength minimum="10" maximum="100" />
 		
 		</h:inputText>
@@ -48,6 +47,12 @@
 		
 		<h:outputLabel value="Idade:"/>
 		<h:inputText value="#{pessoaBean.pessoa.idade}" />
+		
+		<h:outputLabel value="CPF:"/>
+		<h:inputText value="#{pessoaBean.pessoa.cpf}" />
+		
+		<h:outputLabel value="Titulo Eleitoral:"/>
+		<h:inputText value="#{pessoaBean.pessoa.titEleitoral}" />
 		
 		<h:outputLabel value="Sexo:"/>
 		
@@ -82,38 +87,6 @@
 		
 		
 		</h:selectManyMenu>
-		
-		<h:outputLabel value="CEP:" />
-		<h:inputText  value="#{pessoaBean.pessoa.cep}" pt:placeholder="Informe um CEP Válido">
-		
-		    <f:ajax event="blur" execute="@this" listener="#{pessoaBean.pesquisarCep}" 
-		    render="logradouro complemento bairro localidade uf unidade ibge gia"/>
-		
-		</h:inputText>
-		
-		<h:outputLabel  value="Logradouro:" />
-		<h:inputText  value="#{pessoaBean.pessoa.logradouro}" id="logradouro"/>
-		
-		<h:outputLabel  value="Complemento:" />
-		<h:inputText  value="#{pessoaBean.pessoa.complemento}" id="complemento"/>
-		
-		<h:outputLabel  value="Bairro:" />
-		<h:inputText  value="#{pessoaBean.pessoa.bairro}" id="bairro"/>
-		
-		<h:outputLabel  value="Localidade:" />
-		<h:inputText  value="#{pessoaBean.pessoa.localidade}" id="localidade"/>
-		
-		<h:outputLabel  value="UF:" />
-		<h:inputText  value="#{pessoaBean.pessoa.uf}" id="uf"/>
-		
-		<h:outputLabel  value="Unidade:" />
-		<h:inputText  value="#{pessoaBean.pessoa.unidade}" id="unidade"/>
-		
-		<h:outputLabel  value="Ibge:" />
-		<h:inputText  value="#{pessoaBean.pessoa.ibge}" id="ibge"/>
-		
-		<h:outputLabel  value="Gia:" />
-		<h:inputText  value="#{pessoaBean.pessoa.gia}" id="gia"/>
 		
 		
 		
@@ -165,22 +138,56 @@
 		  
 		</h:selectManyCheckbox>
 		
-		<h:outputLabel  value="Estados:"/>
-		<h:selectOneMenu value="#{pessoaBean.pessoa.estados}" immediate="true" id="comboEstados" converter="estadoConverter">
+		<h:outputLabel  value="Estado:"/>
+		<h:selectOneMenu value="#{pessoaBean.pessoa.estados}" immediate="true" id="comboEstados" converter="estadoConverter" required="false">
 		     
-		     <f:selectItem itemLabel="--[Selecione]--" noSelectionOption="true"/>
-		     <f:selectItems value="#{pessoaBean.estados}" />
-		     <f:ajax event="change" execute="@this"  render="comboCidade"  listener="#{pessoaBean.carregaCidades}"/>
+		     <f:selectItem itemLabel="--[Selecione]--" noSelectionOption="true" itemValue="0"/>
+		     <f:selectItems value="#{pessoaBean.estados}"  var="e" itemValue="#{e}" itemLabel="#{e.nome}"/>
+		     <f:ajax event="change" execute="@form"  render="@form"  listener="#{pessoaBean.carregaCidades}"/>
 		     
 		
 		</h:selectOneMenu>
 		
-		<h:outputLabel value="Cidades:"/>
-		<h:selectOneMenu value="#{pessoaBean.pessoa.cidades}" immediate="true" id="comboCidade" converter="cidadeConverter">
-		   <f:selectItem noSelectionOption="true" itemLabel="--[Selecione]--"/>
-		   <f:selectItems value="#{pessoaBean.cidades}" />
+		<h:outputLabel value="Cidade:"/>
+		<h:selectOneMenu value="#{pessoaBean.pessoa.cidades}" immediate="true" id="comboCidade" converter="cidadeConverter" required="false">
+		   <f:selectItem noSelectionOption="true" itemLabel="--[Selecione]--" itemValue="0" />
+		   <f:selectItems value="#{pessoaBean.cidades}" var="c" itemValue="#{c}" itemLabelEscaped="#{e.nome}" />
 		
 		</h:selectOneMenu>
+		
+		<h:outputLabel value="CEP:" />
+		<h:inputText  value="#{pessoaBean.pessoa.cep}" pt:placeholder="Informe um CEP Válido">
+		
+		    <f:ajax event="blur" execute="@form" listener="#{pessoaBean.pesquisarCep}" 
+		    render="@form"/>
+		
+		</h:inputText>
+		
+		<h:outputLabel  value="Logradouro:" />
+		<h:inputText  value="#{pessoaBean.pessoa.logradouro}" id="logradouro"/>
+		
+		<h:outputLabel  value="Complemento:" />
+		<h:inputText  value="#{pessoaBean.pessoa.complemento}" id="complemento"/>
+		
+		<h:outputLabel  value="Bairro:" />
+		<h:inputText  value="#{pessoaBean.pessoa.bairro}" id="bairro"/>
+		
+		<h:outputLabel  value="Localidade:" />
+		<h:inputText  value="#{pessoaBean.pessoa.localidade}" id="localidade"/>
+		
+		<h:outputLabel  value="UF:" />
+		<h:inputText  value="#{pessoaBean.pessoa.uf}" id="uf"/>
+		
+		<h:outputLabel  value="Unidade:" />
+		<h:inputText  value="#{pessoaBean.pessoa.unidade}" id="unidade"/>
+		
+		<h:outputLabel  value="Ibge:" />
+		<h:inputText  value="#{pessoaBean.pessoa.ibge}" id="ibge"/>
+		
+		<h:outputLabel  value="Gia:" />
+		<h:inputText  value="#{pessoaBean.pessoa.gia}" id="gia"/>
+		
+		
 		
 		<h:outputLabel />
 		
@@ -230,6 +237,16 @@
            </h:column>
            
              <h:column>
+               
+	               <f:facet name="header">Foto</f:facet>
+	             <h:commandLink actionListener="#{pessoaBean.download}">   
+	               <h:graphicImage width="60" height="60" value="#{p.fotoIconBase64}" />
+	               <f:param name="fileDownloadId" value="#{p.id}"/>
+               </h:commandLink>
+               
+             </h:column>
+             
+             <h:column>
                 <f:facet name="header">Sobrenome</f:facet>
                 
                <h:outputText value="#{p.sobrenome}"/>
@@ -247,7 +264,7 @@
            
           <h:column rendered="#{pessoaBean.permiteAcesso('Administrador')}" >
                 <f:facet name="header">Excluir</f:facet>
-               <h:commandLink  action="#{pessoaBean.remove}" title="Excluir">
+               <h:commandLink  action="#{pessoaBean.remove}" title="Excluir" immediate="true">
                    <f:setPropertyActionListener value="#{p}" target="#{pessoaBean.pessoa}" />
                    <h:graphicImage  value="resources/img/delete.png"/>
                 
