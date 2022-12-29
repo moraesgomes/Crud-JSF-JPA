@@ -34,7 +34,7 @@
 		<h:inputFile id="foto" value="#{pessoaBean.arquivofoto}"></h:inputFile>
       
         <h:outputLabel  value="Nome:"/>
-		<h:inputText value="#{pessoaBean.pessoa.nome}" 
+		<h:inputText value="#{pessoaBean.pessoa.nome}"  valueChangeListener="#{pessoaBean.mudancaDeValor}"
 		   required="true" requiredMessage="Informe o nome do usuário" pt:placeholder="Informe o nome " >
 		    <f:validateLength minimum="10" maximum="100" />
 		
@@ -195,7 +195,7 @@
 		    <h:commandButton value="Novo" id="botaoNovo" action="#{pessoaBean.novo}" >
 		      <f:ajax execute="botaoNovo" render="@form"/>
 		    </h:commandButton>
-	        <h:commandButton value="Salvar" action="#{pessoaBean.salvar}" />
+	        <h:commandButton value="Salvar" action="#{pessoaBean.salvar}" actionListener="#{pessoaBean.registraLog}" />
 	        <h:commandButton value="Remover" action="#{pessoaBean.remove}" rendered="#{pessoaBean.permiteAcesso('Administrador')}"  />
 	        <h:commandButton value="Limpar" id="botaoLimpar" action="#{pessoaBean.limpar}">
 	        

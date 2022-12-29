@@ -17,21 +17,21 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.DatatypeConverter;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 
 import br.com.dao.DaoGeneric;
 import br.com.entidades.Cidades;
@@ -39,18 +39,23 @@ import br.com.entidades.Estados;
 import br.com.entidades.Pessoa;
 import br.com.jpautil.JPAUtil;
 import br.com.repository.IDaoPessoa;
-import br.com.repository.IDaoPessoaImpl;
 
-@ViewScoped
-@ManagedBean(name = "pessoaBean")
+@javax.faces.view.ViewScoped
+@Named( value = "pessoaBean")
 public class PessoaBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private Pessoa pessoa = new Pessoa();
-	private DaoGeneric<Pessoa> daoGeneric = new DaoGeneric<Pessoa>();
+	
+	@Inject
+	private DaoGeneric<Pessoa> daoGeneric;
 	private List<Pessoa> pessoas = new ArrayList<Pessoa>();
 	
-	private IDaoPessoa iDaoPessoa = new IDaoPessoaImpl();
+	@Inject
+	private JPAUtil jpaUtil;
+	
+	@Inject
+	private IDaoPessoa iDaoPessoa ;
 	
 	private List<SelectItem> estados;
 	
@@ -102,6 +107,12 @@ public class PessoaBean implements Serializable {
 		
 	    mostrarMsg("Cadastrado com sucesso !!!");
 		return "";
+	}
+	
+	public void registraLog () {
+		
+		
+		
 	}
 	
 	private void mostrarMsg(String msg) {
@@ -245,6 +256,7 @@ public class PessoaBean implements Serializable {
 		return estados;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void carregaCidades(AjaxBehaviorEvent event) {
 		
 		Estados estado = (Estados) ((HtmlSelectOneMenu)event.getSource()).getValue();
@@ -255,7 +267,7 @@ public class PessoaBean implements Serializable {
 				
 				pessoa.setEstados(estado);
 				
-				List<Cidades> cidades =JPAUtil.getEntityManager()
+				List<Cidades> cidades =jpaUtil.getEntityManager()
 						.createQuery("from Cidades where estados.id =  " + estado.getId()).getResultList();
 				
 				List<SelectItem> selectItemsCidade = new ArrayList<SelectItem>();
@@ -270,14 +282,15 @@ public class PessoaBean implements Serializable {
 			}
 		}
 	
-	public void editar() {
+	public String editar() {
 		
 		if (pessoa.getCidades() != null) {
 			
 			Estados estado = pessoa.getCidades().getEstados();
 			pessoa.setEstados(estado);
 			
-			List<Cidades> cidades =JPAUtil.getEntityManager()
+			@SuppressWarnings("unchecked")
+			List<Cidades> cidades =jpaUtil.getEntityManager()
 					.createQuery("from Cidades where estados.id =  " + estado.getId()).getResultList();
 			
 			List<SelectItem> selectItemsCidade = new ArrayList<SelectItem>();
@@ -291,6 +304,7 @@ public class PessoaBean implements Serializable {
 			setCidades(selectItemsCidade);
 		}
 		
+		return "";
 	}
 	
 	
@@ -338,6 +352,13 @@ public class PessoaBean implements Serializable {
 		}
 		
 		return buf;
+		
+	}
+	
+	public void mudancaDeValor(ValueChangeEvent evento) {
+		
+		System.out.println("Valor antigo :" + evento.getOldValue());
+		System.out.println("Valor Novo: " + evento.getNewValue());
 		
 	}
 	
