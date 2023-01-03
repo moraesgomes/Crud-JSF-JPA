@@ -4,7 +4,11 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:b="http://bootsfaces.net/ui"
       xmlns:f="http://java.sun.com/jsf/core">
-
+      
+      <h:head>
+          <link rel="stylesheet" type="text/css" href="resources/style.css" media="screen"  />
+      </h:head>
+     
      <h:form>
      
      <b:navBar brand="Menu" fluid="true">
@@ -15,7 +19,7 @@
           
           <b:dropMenu value="Relatórios">
            <b:navCommandLink value="Rel. Notas" action="rellancamento"/>
-           <b:navCommandLink value="Rel. Usuários"/>
+           <b:navCommandLink value="Rel. Usuários" action="relusuario"/>
           </b:dropMenu>
           
           <b:navCommandLink value="Trocar o Usuário" action="#{pessoaBean.deslogar}" />

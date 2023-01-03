@@ -5,11 +5,20 @@
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"> <h:head>
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"> 
 
-	<title>Cadastro de Usuários</title>
 
-</h:head> <h:body>
+<h:head> 
+       
+      
+       <title> Cadastro de Usuários</title>
+      <link rel="stylesheet" type="text/css" href="resources/style.css" media="screen"  />
+
+  
+</h:head>
+
+
+<h:body>
 
 	<ui:include src="/menu.xhtml" />
 
@@ -22,7 +31,7 @@
 
 			<f:facet name="header">
 
-				<h:outputText value="Cadastro De Usuário" />
+				<h:outputText value="Cadastro De Usuário" style="text-align:'center'; "/>
 			</f:facet>
 			<b:panel>
 
@@ -59,17 +68,17 @@
 
 				<b:column>
 					<h:outputLabel value="Idade:" />
-					<b:inputText value="#{pessoaBean.pessoa.idade}" />
+					<b:inputText value="#{pessoaBean.pessoa.idade}" mask="numeric" />
 				</b:column>
 
 				<b:column>
 					<h:outputLabel value="CPF:" />
-					<b:inputText value="#{pessoaBean.pessoa.cpf}" />
+					<b:inputText value="#{pessoaBean.pessoa.cpf}" mask="999.999.999-99" />
 				</b:column>
 
 				<b:column>
 					<h:outputLabel value="Titulo Eleitoral:" />
-					<b:inputText value="#{pessoaBean.pessoa.titEleitoral}" />
+					<b:inputText value="#{pessoaBean.pessoa.titEleitoral}" mask="numeric"/>
 				</b:column>
 
 				<b:column>
@@ -118,9 +127,7 @@
 
 				
 
-			</b:panel>
-
-			<b:panel>
+		
 			
 			     <b:column>
 					<h:outputLabel value="Login:" />
@@ -163,6 +170,10 @@
 
 					</h:selectOneRadio>
 				</b:column>
+				
+		</b:panel>
+
+		<b:panel>
 
 			<b:column>
 				<h:outputLabel value="Linguagens:" />
@@ -178,9 +189,7 @@
 				</h:selectManyCheckbox>
 			</b:column>
 
-			</b:panel>
-
-			<b:panel>
+			
 
 				<b:column>
 					<h:outputLabel value="Estado:" />
@@ -214,7 +223,7 @@
 
 				<b:column>
 					<h:outputLabel value="CEP:" />
-					<b:inputText value="#{pessoaBean.pessoa.cep}"
+					<b:inputText value="#{pessoaBean.pessoa.cep}" mask="99999-999"
 						pt:placeholder="Informe um CEP Válido">
 
 						<f:ajax event="blur" execute="@form"
@@ -223,15 +232,17 @@
 					</b:inputText>
 				</b:column>
 
+             </b:panel>
 
+			 <b:panel>
+			 
 				<b:column>
 					<h:outputLabel value="Logradouro:" />
 					<b:inputText value="#{pessoaBean.pessoa.logradouro}"
 						id="logradouro" />
 				</b:column>
 
-			</b:panel>
-			<b:panel>
+		
 
 				<b:column>
 					<h:outputLabel value="Complemento:" />
@@ -250,16 +261,15 @@
 						id="localidade" />
 				</b:column>
 
-
+            </b:panel>
+			<b:panel>
 
 				<b:column>
 					<h:outputLabel value="UF:" />
 					<b:inputText value="#{pessoaBean.pessoa.uf}" id="uf" />
 				</b:column>
 
-			</b:panel>
-
-			<b:panel>
+			
 				<b:column>
 					<h:outputLabel value="Unidade:" />
 					<b:inputText value="#{pessoaBean.pessoa.unidade}" id="unidade" />
@@ -277,10 +287,10 @@
 
 			</b:panel>
 
-
+        
 			<h:panelGroup>
 				<h:commandButton value="Novo" id="botaoNovo"
-					action="#{pessoaBean.novo}">
+					action="#{pessoaBean.novo}" look="primary" style="margin-left: 15px;">
 					<f:ajax execute="botaoNovo" render="@form" />
 				</h:commandButton>
 				<h:commandButton value="Salvar" action="#{pessoaBean.salvar}"
@@ -294,7 +304,7 @@
 				</h:commandButton>
 
 			</h:panelGroup>
-
+       
 		</h:panelGrid>
 	  
 		<br/>
@@ -334,7 +344,7 @@
 
 				<f:facet name="header">Foto</f:facet>
 				<h:commandLink actionListener="#{pessoaBean.download}">
-					<h:graphicImage width="60" height="60" value="#{p.fotoIconBase64}" />
+					<h:graphicImage width="20" height="20" value="#{p.fotoIconBase64}" />
 					<f:param name="fileDownloadId" value="#{p.id}" />
 				</h:commandLink>
 
@@ -378,5 +388,7 @@
 	</h:form>
 
 
+</h:body>
 
-</h:body> </html>
+
+ </html>

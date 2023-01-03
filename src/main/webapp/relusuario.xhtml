@@ -7,7 +7,7 @@
       xmlns:ui = "http://java.sun.com/jsf/facelets">
 
 <h:head>
-   <title>Lançamentos</title>
+   <title>Usuário</title>
    <link href="resources/style.css" rel="stylesheet"></link>
 </h:head>
 
@@ -16,7 +16,7 @@
          <ui:include src="/menu.xhtml" />   
 	   
 	    <b:messages id="msg"></b:messages>
-	    <b:form id="formLancamento" >
+	    <b:form id="formPessoas" >
 	          
 		            <b:panelGrid columns="2">
 		            
@@ -24,21 +24,21 @@
 		            <b:column>
 		            
 		               <h:outputLabel value="Data Ini:" />
-		               <b:datepicker locale="en" value="#{relLancamento.dataIni}"/>
+		               <b:datepicker locale="en" value="#{relUsuario.dataIni}"/>
 		            
 		            </b:column>
 		            
 		            <b:column>
 		            
 		               <h:outputLabel value="Data Fim:" />
-		               <b:datepicker value="#{relLancamento.dataFim}"/>
+		               <b:datepicker value="#{relUsuario.dataFim}"/>
 		            
 		            </b:column>
 		            
 		            <b:column>
 		            
-		               <h:outputLabel value="Número Nota:" />
-		               <b:inputText locale="en" value="#{relLancamento.numNota}"/>
+		               <h:outputLabel value="Nome:" />
+		               <b:inputText locale="en" value="#{relUsuario.nome}"/>
 		            
 		            </b:column>
 		            
@@ -46,7 +46,7 @@
 		          
 		            </b:panelGrid>
 			          
-				    <b:commandButton value="Buscar" action="#{relLancamento.buscarLancamento}"  look="primary" style="margin-left: 15px;"/>
+				    <b:commandButton value="Buscar" action="#{relUsuario.relPessoa}"  look="primary" style="margin-left: 15px;"/>
 							    
 		     </b:form>
 		         
@@ -55,16 +55,11 @@
 		          
 		          <b:form>
 		          
-		          <b:dataTable value="#{relLancamento.lancamentos}" var="lanc" border = "3" cellpadding="6" pdf="true" excel="true">
+		          <b:dataTable value="#{relUsuario.pessoas}" var="p" border = "3" cellpadding="6" pdf="true" excel="true">
 		           
-		             <b:dataTableColumn  value="#{lanc.id}" label="ID"/> 
-		             <b:dataTableColumn  value="#{lanc.numeNotaFiscal}" label="Nota"/>
-		             <b:dataTableColumn  value="#{lanc.usuario.nome}" label="User"/>
-		             <b:dataTableColumn  value="#{lanc.dataIni}" label="Inicial"/>
-		             <b:dataTableColumn  value="#{lanc.dataFin}" label="Final"/>
-		              
+		             <b:dataTableColumn  value="#{p.id}" label="ID"/> 
+		             <b:dataTableColumn  value="#{p.nome}" label="Nome"/>
 		             
-		          
 		           </b:dataTable>
 		           
 		         </b:form> 
